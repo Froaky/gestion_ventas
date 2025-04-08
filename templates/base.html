@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Gestión de Ventas{% endblock %}</title>
+  <!-- Fuente Roboto de Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Toastr CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+  <!-- Hoja de Estilos Principal -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <header>
+    <h1>Gestión de Ventas</h1>
+    <!-- Botón para alternar Modo Oscuro -->
+    <button id="toggleTheme" aria-label="Alternar modo oscuro" class="theme-toggle">
+      <i class="fa-solid fa-moon"></i>
+    </button>
+    <nav aria-label="Menú principal">
+      <div class="radio-input">
+        <!-- Opción 1: Inicio -->
+        <input type="radio" name="menu" id="radio1"
+               {% if request.endpoint == 'home' %}checked{% endif %}
+               onclick="window.location='{{ url_for('home') }}'">
+        <label for="radio1"><i class="fa-solid fa-house"></i> Inicio</label>
+        
+        <!-- Opción 2: Clientes -->
+        <input type="radio" name="menu" id="radio2"
+               {% if request.endpoint == 'clientes.lista_clientes' %}checked{% endif %}
+               onclick="window.location='{{ url_for('clientes.lista_clientes') }}'">
+        <label for="radio2"><i class="fa-solid fa-user"></i> Clientes</label>
+        
+        <!-- Opción 3: Proveedores -->
+        <input type="radio" name="menu" id="radio3"
+               {% if request.endpoint == 'proveedores.lista_proveedores' %}checked{% endif %}
+               onclick="window.location='{{ url_for('proveedores.lista_proveedores') }}'">
+        <label for="radio3"><i class="fa-solid fa-truck"></i> Proveedores</label>
+        
+        <!-- Opción 4: Productos -->
+        <input type="radio" name="menu" id="radio4"
+               {% if request.endpoint == 'productos.lista_productos' %}checked{% endif %}
+               onclick="window.location='{{ url_for('productos.lista_productos') }}'">
+        <label for="radio4"><i class="fa-solid fa-box-open"></i> Productos</label>
+        
+        <div class="selection"></div>
+      </div>
+    </nav>
+  </header>
+  <main>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class="flashes">
+          {% for category, message in messages %}
+            <li class="{{ category }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+  <footer>
+    <p>&copy; 2025 Gestión de Ventas</p>
+  </footer>
+  
+  <!-- Chart.js (para el dashboard en la página de inicio) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Toastr JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+  <!-- Script para alternar tema y otras interacciones -->
+  <script>
+    // Alternar modo oscuro
+    const toggleThemeBtn = document.getElementById('toggleTheme');
+    toggleThemeBtn.addEventListener('click', function() {
+      document.body.classList.toggle('dark-mode');
+      // Cambia el ícono según el modo
+      const icon = this.querySelector('i');
+      if (document.body.classList.contains('dark-mode')) {
+        icon.className = 'fa-solid fa-sun';
+      } else {
+        icon.className = 'fa-solid fa-moon';
+      }
+    });
+    
+    // Ejemplo de notificación con Toastr (puedes integrarlo con tus flash messages)
+    {% if get_flashed_messages() %}
+      {% for category, message in get_flashed_messages(with_categories=true) %}
+        toastr.options = {
+          "positionClass": "toast-top-right",
+          "timeOut": "3000"
+        };
+        toastr["{{ category }}"]("{{ message }}");
+      {% endfor %}
+    {% endif %}
+    
+    // Ejemplo simple de gráfico en la página de inicio (puedes personalizarlo)
+    {% if request.endpoint == 'home' %}
+      window.addEventListener('load', () => {
+        const ctx = document.getElementById('salesChart');
+        if (ctx) {
+          new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo'],
+              datasets: [{
+                label: 'Ventas',
+                data: [12, 19, 3, 5, 2],
+                backgroundColor: 'var(--color-red)',
+                borderColor: 'var(--color-mid-blue)',
+                borderWidth: 1
+              }]
+            },
+            options: {
+              responsive: true,
+              scales: {
+                y: {
+                  beginAtZero: true
+                }
+              }
+            }
+          });
+        }
+      });
+    {% endif %}
+  </script>
+</body>
+</html>

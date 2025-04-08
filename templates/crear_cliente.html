@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Crear Cliente{% endblock %}
+
+{% block content %}
+<h2>Crear Cliente</h2>
+<form method="POST">
+    <label for="name">Nombre:</label>
+    <input type="text" name="name" id="name" required>
+    <br><br>
+    <label for="telefono">Teléfono:</label>
+    <input type="text" name="telefono" id="telefono">
+    <br><br>
+    <button type="submit">Crear</button>
+</form>
+{% endblock %}
