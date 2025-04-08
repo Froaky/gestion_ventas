@@ -24,3 +24,6 @@ python -m venv venv source venv/bin/activate # Linux/Mac venv\Scripts\activate #
 python app.py
 
 La aplicación se ejecutará en `http://127.0.0.1:5000/`.
+
+by: Froaky
+
