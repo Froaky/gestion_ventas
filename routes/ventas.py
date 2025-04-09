@@ -1,6 +1,7 @@
+import datetime  # Asegúrate de importar el módulo datetime
 from flask import Blueprint, request, jsonify, render_template, redirect, url_for, flash
 from models import db, Venta, Cliente, Producto
-# Nota: En este ejemplo, los detalles de venta no se gestionan en la interfaz HTML.
+
 bp = Blueprint('ventas', __name__, url_prefix='/ventas')
 
 # --- API REST Endpoints ---
@@ -29,7 +30,7 @@ def lista_ventas():
 @bp.route('/crear', methods=['GET', 'POST'])
 def crear_venta():
     clientes = Cliente.query.all()
-    productos = Producto.query.all()  # Si quieres mostrar productos para detalles
+    productos = Producto.query.all()  # Para mostrar productos, si lo deseas
     if request.method == 'POST':
         cliente_id = request.form.get('cliente_id')
         total = request.form.get('total', 0.0)
@@ -59,3 +60,37 @@ def eliminar_venta(id):
     db.session.commit()
     flash('Venta eliminada correctamente', 'success')
     return redirect(url_for('ventas.lista_ventas'))
+
+@bp.route('/')
+def home():
+    # Obtener los datos de los últimos 5 meses (puedes reemplazar los datos ficticios con consultas reales)
+    labels, totals = get_ventas_ultimos_5_meses()
+    return render_template('home.html', labels=labels, totals=totals)
+
+def get_ventas_ultimos_5_meses():
+    """
+    Lógica para calcular los últimos 5 meses.
+    Devuelve dos listas:
+      - labels: nombres de cada mes (ej: "2023-12")
+      - totals: totales de ventas para cada mes (datos ficticios en este ejemplo)
+    """
+    hoy = datetime.date.today()
+    labels = []
+    totals = []
+    
+    # Retrocede 4 meses + mes actual = 5 meses en total.
+    for i in range(4, -1, -1):
+        mes = hoy.month - i
+        year = hoy.year
+        while mes <= 0:
+            mes += 12
+            year -= 1
+
+        mes_str = f"{year}-{mes:02d}"
+        labels.append(mes_str)
+        
+        # Lógica ficticia: reemplaza con tu consulta real.
+        total_ventas = 1000 + i * 50  # Datos ficticios
+        totals.append(total_ventas)
+
+    return labels, totals

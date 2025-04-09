@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Buscar Cliente{% endblock %}
+{% block content %}
+<h2>Buscar Cliente</h2>
+<form method="POST">
+    <label for="nombre">Nombre:</label>
+    <input type="text" id="nombre" name="nombre" required>
+    <button type="submit">Buscar</button>
+</form>
+{% if resultados %}
+    <h3>Resultados:</h3>
+    <ul>
+      {% for cliente in resultados %}
+        <li>{{ cliente.name }} - {{ cliente.telefono }}</li>
+      {% endfor %}
+    </ul>
+{% elif resultados is defined %}
+    <p>No se encontraron clientes.</p>
+{% endif %}
+{% endblock %}

@@ -70,61 +70,14 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- Toastr JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-  <!-- Script para alternar tema y otras interacciones -->
+  <!-- Script para el Modo Oscuro -->
+  <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+  <!-- Script para manejar mensajes flash -->
   <script>
-    // Alternar modo oscuro
-    const toggleThemeBtn = document.getElementById('toggleTheme');
-    toggleThemeBtn.addEventListener('click', function() {
-      document.body.classList.toggle('dark-mode');
-      // Cambia el ícono según el modo
-      const icon = this.querySelector('i');
-      if (document.body.classList.contains('dark-mode')) {
-        icon.className = 'fa-solid fa-sun';
-      } else {
-        icon.className = 'fa-solid fa-moon';
-      }
-    });
-    
-    // Ejemplo de notificación con Toastr (puedes integrarlo con tus flash messages)
-    {% if get_flashed_messages() %}
-      {% for category, message in get_flashed_messages(with_categories=true) %}
-        toastr.options = {
-          "positionClass": "toast-top-right",
-          "timeOut": "3000"
-        };
-        toastr["{{ category }}"]("{{ message }}");
-      {% endfor %}
-    {% endif %}
-    
-    // Ejemplo simple de gráfico en la página de inicio (puedes personalizarlo)
-    {% if request.endpoint == 'home' %}
-      window.addEventListener('load', () => {
-        const ctx = document.getElementById('salesChart');
-        if (ctx) {
-          new Chart(ctx, {
-            type: 'bar',
-            data: {
-              labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo'],
-              datasets: [{
-                label: 'Ventas',
-                data: [12, 19, 3, 5, 2],
-                backgroundColor: 'var(--color-red)',
-                borderColor: 'var(--color-mid-blue)',
-                borderWidth: 1
-              }]
-            },
-            options: {
-              responsive: true,
-              scales: {
-                y: {
-                  beginAtZero: true
-                }
-              }
-            }
-          });
-        }
-      });
-    {% endif %}
+      // Pasa los mensajes flash (si existen) en formato JSON:
+  window.flashedMessages = {{ get_flashed_messages(with_categories=true) | tojson }};
+  // Pasa una variable booleana para indicar si estamos en la página de inicio:
+  window.isHome = {{ 'true' if request.endpoint == 'home' else 'false' }};
   </script>
 </body>
 </html>

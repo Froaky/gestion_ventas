@@ -10,4 +10,11 @@
 <div style="max-width: 600px; margin: 30px auto;">
   <canvas id="salesChart" aria-label="Gráfico de ventas" role="img"></canvas>
 </div>
+
+<!-- Inyección de datos para el gráfico -->
+<script>
+  window.salesLabels = {{ labels | default([]) | tojson }};
+  window.salesTotals = {{ totals | default([]) | tojson }};
+</script>
+
 {% endblock %}
