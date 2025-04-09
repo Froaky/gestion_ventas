@@ -1,96 +1,93 @@
-import datetime  # Asegúrate de importar el módulo datetime
+import datetime  # Puedes mantenerlo si lo necesitás en algún otro lugar
 from flask import Blueprint, request, jsonify, render_template, redirect, url_for, flash
-from models import db, Venta, Cliente, Producto
+from services.ventas_service import (
+    get_all_ventas,
+    create_venta,
+    update_venta,
+    delete_venta,
+    get_ventas_ultimos_5_meses
+)
+from models.venta import Venta  # Para usarlo en vistas de edición, por ejemplo
 
 bp = Blueprint('ventas', __name__, url_prefix='/ventas')
 
 # --- API REST Endpoints ---
+
 @bp.route('/api', methods=['GET'])
 def get_ventas_api():
-    ventas = Venta.query.all()
+    ventas = get_all_ventas()
     return jsonify([venta.to_dict() for venta in ventas])
 
 @bp.route('/api', methods=['POST'])
 def create_venta_api():
     data = request.get_json()
-    new_venta = Venta(
+    nueva = create_venta(
         cliente_id=data.get('cliente_id'),
-        total=data.get('total', 0.0)
+        total=float(data.get('total', 0.0))
     )
-    db.session.add(new_venta)
-    db.session.commit()
-    return jsonify(new_venta.to_dict()), 201
+    return jsonify(nueva.to_dict()), 201
+
+@bp.route('/api/<int:id>', methods=['PUT'])
+def update_venta_api(id):
+    data = request.get_json()
+    actualizado = update_venta(
+        id,
+        cliente_id=data.get('cliente_id'),
+        total=float(data.get('total', 0.0))
+    )
+    return jsonify(actualizado.to_dict())
+
+@bp.route('/api/<int:id>', methods=['DELETE'])
+def delete_venta_api(id):
+    delete_venta(id)
+    return jsonify({"message": "Venta eliminada"}), 204
+
+@bp.route('/api/sales_by_month', methods=['GET'])
+def sales_by_month():
+    labels, totals, counts = get_ventas_ultimos_5_meses()
+    return jsonify({"labels": labels, "totals": totals, "counts": counts})
 
 # --- Vistas HTML ---
+
 @bp.route('/lista', methods=['GET'])
 def lista_ventas():
-    ventas = Venta.query.all()
-    return render_template('ventas.html', ventas=ventas)
+    ventas = get_all_ventas()
+    return render_template('ventas/lista.html', ventas=ventas)
 
 @bp.route('/crear', methods=['GET', 'POST'])
-def crear_venta():
+def crear_venta_view():
+    from models.cliente import Cliente
+    from models.producto import Producto  # Si necesitás mostrar productos o detalles
     clientes = Cliente.query.all()
-    productos = Producto.query.all()  # Para mostrar productos, si lo deseas
+    productos = Producto.query.all()  # Opcional
     if request.method == 'POST':
         cliente_id = request.form.get('cliente_id')
-        total = request.form.get('total', 0.0)
-        nueva_venta = Venta(cliente_id=cliente_id, total=total)
-        db.session.add(nueva_venta)
-        db.session.commit()
+        total = float(request.form.get('total', 0.0))
+        create_venta(cliente_id, total)
         flash('Venta creada correctamente', 'success')
         return redirect(url_for('ventas.lista_ventas'))
-    return render_template('crear_venta.html', clientes=clientes, productos=productos)
+    return render_template('ventas/crear.html', clientes=clientes, productos=productos)
 
 @bp.route('/editar/<int:id>', methods=['GET', 'POST'])
-def editar_venta(id):
+def editar_venta_view(id):
     venta = Venta.query.get_or_404(id)
+    from models.cliente import Cliente
+    clientes = Cliente.query.all()
     if request.method == 'POST':
-        venta.cliente_id = request.form.get('cliente_id')
-        venta.total = request.form.get('total', venta.total)
-        db.session.commit()
+        cliente_id = request.form.get('cliente_id')
+        total = float(request.form.get('total', venta.total))
+        update_venta(id, cliente_id, total)
         flash('Venta actualizada correctamente', 'success')
         return redirect(url_for('ventas.lista_ventas'))
-    clientes = Cliente.query.all()
-    return render_template('editar_venta.html', venta=venta, clientes=clientes)
+    return render_template('ventas/editar.html', venta=venta, clientes=clientes)
 
 @bp.route('/eliminar/<int:id>', methods=['GET'])
-def eliminar_venta(id):
-    venta = Venta.query.get_or_404(id)
-    db.session.delete(venta)
-    db.session.commit()
+def eliminar_venta_view(id):
+    delete_venta(id)
     flash('Venta eliminada correctamente', 'success')
     return redirect(url_for('ventas.lista_ventas'))
 
 @bp.route('/')
 def home():
-    # Obtener los datos de los últimos 5 meses (puedes reemplazar los datos ficticios con consultas reales)
-    labels, totals = get_ventas_ultimos_5_meses()
-    return render_template('home.html', labels=labels, totals=totals)
-
-def get_ventas_ultimos_5_meses():
-    """
-    Lógica para calcular los últimos 5 meses.
-    Devuelve dos listas:
-      - labels: nombres de cada mes (ej: "2023-12")
-      - totals: totales de ventas para cada mes (datos ficticios en este ejemplo)
-    """
-    hoy = datetime.date.today()
-    labels = []
-    totals = []
-    
-    # Retrocede 4 meses + mes actual = 5 meses en total.
-    for i in range(4, -1, -1):
-        mes = hoy.month - i
-        year = hoy.year
-        while mes <= 0:
-            mes += 12
-            year -= 1
-
-        mes_str = f"{year}-{mes:02d}"
-        labels.append(mes_str)
-        
-        # Lógica ficticia: reemplaza con tu consulta real.
-        total_ventas = 1000 + i * 50  # Datos ficticios
-        totals.append(total_ventas)
-
-    return labels, totals
+    labels, totals, counts = get_ventas_ultimos_5_meses()
+    return render_template('home.html', labels=labels, totals=totals, counts=counts)

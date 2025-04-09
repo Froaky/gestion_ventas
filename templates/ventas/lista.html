@@ -1,10 +1,8 @@
 {% extends "base.html" %}
-
 {% block title %}Listado de Ventas{% endblock %}
-
 {% block content %}
 <h2>Listado de Ventas</h2>
-<a href="{{ url_for('ventas.crear_venta') }}">Crear nueva venta</a>
+<a href="{{ url_for('ventas.crear_venta_view') }}">Crear nueva venta</a>
 <table>
     <thead>
         <tr>
@@ -23,8 +21,8 @@
             <td>{{ v.fecha }}</td>
             <td>{{ v.total }}</td>
             <td>
-                <a href="{{ url_for('ventas.editar_venta', id=v.id) }}">Editar</a> |
-                <a href="{{ url_for('ventas.eliminar_venta', id=v.id) }}">Eliminar</a>
+                <a href="{{ url_for('ventas.editar_venta_view', id=v.id) }}">Editar</a> |
+                <a href="{{ url_for('ventas.eliminar_venta_view', id=v.id) }}">Eliminar</a>
             </td>
         </tr>
         {% endfor %}

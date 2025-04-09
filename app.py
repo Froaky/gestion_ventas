@@ -1,7 +1,8 @@
 from flask import Flask, render_template
 from config import Config
-from models import db
-from routes import register_blueprints
+from models import db    # Asegurate de que models/__init__.py inicialice db = SQLAlchemy()
+from flask_migrate import Migrate
+from routes import register_blueprints  # Suponiendo que registrás blueprints en una función
 
 def create_app():
     app = Flask(__name__)

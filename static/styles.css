@@ -24,8 +24,8 @@ body.dark-mode {
 }
 
 /* ============================
-     Encabezado y Pie de Página
-     ============================ */
+       Encabezado y Pie de Página
+       ============================ */
 header,
 footer {
   background: linear-gradient(45deg, var(--color-mid-blue), var(--color-dark-blue));
@@ -47,86 +47,60 @@ footer {
 }
 
 /* ============================
-     Menú de Navegación con Radio Buttons
-     ============================ */
-.radio-input {
-  position: relative;
-  max-width: 700px;
-  margin: 20px auto;
-  /* separa un poco del contenido */
-  background-color: #fff;
-  border-radius: 9999px;
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-  border: 1px solid rgba(0, 0, 0, 0.15);
-}
-
-.radio-input input {
-  display: none;
-}
-
-.radio-input label {
-  flex: 1;
-  text-align: center;
-  padding: 10px 0;
-  cursor: pointer;
-  position: relative;
-  z-index: 2;
-  color: var(--color-dark-blue);
-  font-weight: bold;
-  font-size: 14px;
-  transition: background-color 0.3s ease, transform 0.3s ease, color 0.3s ease;
-}
-
-/* Hover en cada opción */
-.radio-input label:hover {
-  background-color: rgba(240, 75, 74, 0.2);
-  transform: scale(1.03);
-}
-
-/* Franja resaltadora */
-.selection {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 25%;
-  height: 100%;
-  background-color: var(--color-red);
-  border-radius: 9999px;
-  transform: translateX(0);
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 1;
-}
-
-/* Movimiento de la franja según opción */
-#radio1:checked~.selection {
-  transform: translateX(0%);
-}
-
-#radio2:checked~.selection {
-  transform: translateX(100%);
-}
-
-#radio3:checked~.selection {
-  transform: translateX(200%);
-}
-
-#radio4:checked~.selection {
-  transform: translateX(300%);
-}
-
-/* Cambiar color del label al estar seleccionado */
-#radio1:checked+label,
-#radio2:checked+label,
-#radio3:checked+label,
-#radio4:checked+label {
-  color: #fff;
-}
+   Menú de Navegación con Radio Buttons (5 botones)
+   ============================ */
+   .radio-input {
+    position: relative;
+    width: 700px;      /* Ajustalo a tu gusto */
+    margin: 20px auto; /* Centrado horizontal */
+    border-radius: 9999px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    background-color: #fff;
+    font-size: 0;      /* Evita espacios en blanco entre inline-blocks */
+    display: inline-block;
+    overflow: hidden;
+  }
+  
+  /* Ocultamos los radios */
+  .radio-input input {
+    display: none;
+  }
+  
+  /* Cada label ocupa 20% del contenedor */
+  .radio-input label {
+    display: inline-block;
+    width: 20%;
+    height: 50px;         /* Ajustá la altura a tu gusto */
+    line-height: 50px;    /* Para centrar verticalmente el texto */
+    text-align: center;
+    vertical-align: middle;
+    color: var(--color-dark-blue);
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s, color 0.3s;
+    box-sizing: border-box;
+  }
+  
+  /* Hover */
+  .radio-input label:hover {
+    background-color: rgba(240, 75, 74, 0.2);
+    transform: scale(1.03);
+  }
+  
+  /* El botón seleccionado se pone rojo y con texto blanco */
+  #radio1:checked + label,
+  #radio2:checked + label,
+  #radio3:checked + label,
+  #radio4:checked + label,
+  #radio5:checked + label {
+    background-color: var(--color-red);
+    color: #fff;
+  }
 
 /* ============================
-     Responsividad
-     ============================ */
+       Responsividad
+       ============================ */
 @media (max-width: 768px) {
   .radio-input {
     max-width: 100%;
@@ -140,13 +114,26 @@ footer {
 }
 
 /* ============================
-     Contenido y Otros Componentes
-     ============================ */
+       Contenido y Otros Componentes
+       ============================ */
 main {
   padding: 20px;
 }
 
-/* Mensajes Toastr (los estilos propios de Toastr se cargarán con su CDN, pero puedes personalizarlos aquí si lo deseas) */
+/* Mensajes Toastr */
+.flashes {
+  list-style: none;
+  margin: 0 0 1em 0;
+  padding: 0;
+}
+
+.flashes li.success {
+  color: green;
+}
+
+.flashes li.error {
+  color: red;
+}
 
 /* Tablas */
 table {
@@ -240,7 +227,7 @@ h3 {
   margin-bottom: 15px;
 }
 
-/*Boton animado*/
+/* Botón animado (opcional) */
 .animated-button {
   position: relative;
   display: flex;
@@ -258,10 +245,8 @@ h3 {
   cursor: pointer;
   overflow: hidden;
   transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-
   transform: scale(0.8);
   transform-origin: center;
-
 }
 
 .animated-button svg {
@@ -340,5 +325,4 @@ h3 {
   height: 40px;
   width: 200px;
   margin: left 550px;
-  ;
 }

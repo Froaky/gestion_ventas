@@ -22,30 +22,16 @@
     </button>
     <nav aria-label="Menú principal">
       <div class="radio-input">
-        <!-- Opción 1: Inicio -->
-        <input type="radio" name="menu" id="radio1"
-               {% if request.endpoint == 'home' %}checked{% endif %}
-               onclick="window.location='{{ url_for('home') }}'">
+        <input type="radio" name="menu" id="radio1" {% if request.endpoint == 'home' %}checked{% endif %} onclick="window.location='{{ url_for('home') }}'">
         <label for="radio1"><i class="fa-solid fa-house"></i> Inicio</label>
-        
-        <!-- Opción 2: Clientes -->
-        <input type="radio" name="menu" id="radio2"
-               {% if request.endpoint == 'clientes.lista_clientes' %}checked{% endif %}
-               onclick="window.location='{{ url_for('clientes.lista_clientes') }}'">
+        <input type="radio" name="menu" id="radio2" {% if request.endpoint == 'clientes.lista_clientes' %}checked{% endif %} onclick="window.location='{{ url_for('clientes.lista_clientes') }}'">
         <label for="radio2"><i class="fa-solid fa-user"></i> Clientes</label>
-        
-        <!-- Opción 3: Proveedores -->
-        <input type="radio" name="menu" id="radio3"
-               {% if request.endpoint == 'proveedores.lista_proveedores' %}checked{% endif %}
-               onclick="window.location='{{ url_for('proveedores.lista_proveedores') }}'">
+        <input type="radio" name="menu" id="radio3" {% if request.endpoint == 'proveedores.lista_proveedores' %}checked{% endif %} onclick="window.location='{{ url_for('proveedores.lista_proveedores') }}'">
         <label for="radio3"><i class="fa-solid fa-truck"></i> Proveedores</label>
-        
-        <!-- Opción 4: Productos -->
-        <input type="radio" name="menu" id="radio4"
-               {% if request.endpoint == 'productos.lista_productos' %}checked{% endif %}
-               onclick="window.location='{{ url_for('productos.lista_productos') }}'">
+        <input type="radio" name="menu" id="radio4" {% if request.endpoint == 'productos.lista_productos' %}checked{% endif %} onclick="window.location='{{ url_for('productos.lista_productos') }}'">
         <label for="radio4"><i class="fa-solid fa-box-open"></i> Productos</label>
-        
+        <input type="radio" name="menu" id="radio5" {% if request.endpoint in ['ventas.lista_ventas', 'ventas.crear_venta', 'ventas.editar_venta', 'ventas.eliminar_venta'] %}checked{% endif %} onclick="window.location='{{ url_for('ventas.lista_ventas') }}'">
+        <label for="radio5"><i class="fa-solid fa-chart-line"></i> Ventas</label>
         <div class="selection"></div>
       </div>
     </nav>
@@ -66,18 +52,19 @@
     <p>&copy; 2025 Gestión de Ventas</p>
   </footer>
   
-  <!-- Chart.js (para el dashboard en la página de inicio) -->
+  <!-- Librerías JS: Chart.js y Toastr -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- Toastr JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-  <!-- Script para el Modo Oscuro -->
-  <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
-  <!-- Script para manejar mensajes flash -->
+  
+  <!-- Inyección de variables globales (antes de cargar dashboard.js) -->
   <script>
-      // Pasa los mensajes flash (si existen) en formato JSON:
-  window.flashedMessages = {{ get_flashed_messages(with_categories=true) | tojson }};
-  // Pasa una variable booleana para indicar si estamos en la página de inicio:
-  window.isHome = {{ 'true' if request.endpoint == 'home' else 'false' }};
+    // Pasa los mensajes flash, si existen, en formato JSON:
+    window.flashedMessages = {{ get_flashed_messages(with_categories=true) | tojson }};
+    // Indica si estamos en la página de inicio:
+    window.isHome = {{ 'true' if request.endpoint == 'home' else 'false' }};
   </script>
+  
+  <!-- Script para el Dashboard, que usa las variables globales inyectadas -->
+  <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
 </body>
 </html>
