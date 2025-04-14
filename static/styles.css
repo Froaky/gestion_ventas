@@ -1,215 +1,328 @@
 /* ============================
    Variables y Reset Global
    ============================ */
-   :root {
-    --color-dark-blue: #42506b;
-    --color-red:       #f04b4a;
-    --color-mid-blue:  #3e619b;
-    --color-light:     #ebebec;
-    --font-family: 'Roboto', sans-serif;
-  }
-  
-  /* Modo claro (por defecto) */
-  body {
-    font-family: var(--font-family);
-    background-color: var(--color-light);
-    color: var(--color-dark-blue);
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-  
-  /* Modo oscuro */
-  body.dark-mode {
-    background-color: var(--color-dark-blue);
-    color: var(--color-light);
-  }
-  
-  /* ============================
-     Encabezado y Pie de Página
-     ============================ */
-  header, footer {
-    background: linear-gradient(45deg, var(--color-mid-blue), var(--color-dark-blue));
-    color: #fff;
-    text-align: center;
-    padding: 20px;
-  }
-  
-  /* Botón de alternar tema */
-  .theme-toggle {
-    background: transparent;
-    border: none;
-    color: #fff;
-    font-size: 18px;
-    cursor: pointer;
-    position: absolute;
-    top: 20px;
-    right: 20px;
-  }
-  
-  /* ============================
-     Menú de Navegación con Radio Buttons
-     ============================ */
-  .radio-input {
+:root {
+  --color-dark-blue: #42506b;
+  --color-red: #f04b4a;
+  --color-mid-blue: #3e619b;
+  --color-light: #ebebec;
+  --font-family: 'Roboto', sans-serif;
+}
+
+/* Modo claro (por defecto) */
+body {
+  font-family: var(--font-family);
+  background-color: var(--color-light);
+  color: var(--color-dark-blue);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Modo oscuro */
+body.dark-mode {
+  background-color: var(--color-dark-blue);
+  color: var(--color-light);
+}
+
+/* ============================
+       Encabezado y Pie de Página
+       ============================ */
+header,
+footer {
+  background: linear-gradient(45deg, var(--color-mid-blue), var(--color-dark-blue));
+  color: #fff;
+  text-align: center;
+  padding: 20px;
+}
+
+/* Botón de alternar tema */
+.theme-toggle {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+/* ============================
+   Menú de Navegación con Radio Buttons (5 botones)
+   ============================ */
+   .radio-input {
     position: relative;
-    max-width: 700px;
-    margin: 20px auto; /* separa un poco del contenido */
-    background-color: #fff;
+    width: 700px;      /* Ajustalo a tu gusto */
+    margin: 20px auto; /* Centrado horizontal */
     border-radius: 9999px;
-    display: flex;
-    align-items: center;
-    overflow: hidden;
     border: 1px solid rgba(0, 0, 0, 0.15);
+    background-color: #fff;
+    font-size: 0;      /* Evita espacios en blanco entre inline-blocks */
+    display: inline-block;
+    overflow: hidden;
   }
   
+  /* Ocultamos los radios */
   .radio-input input {
     display: none;
   }
   
+  /* Cada label ocupa 20% del contenedor */
   .radio-input label {
-    flex: 1;
+    display: inline-block;
+    width: 20%;
+    height: 50px;         /* Ajustá la altura a tu gusto */
+    line-height: 50px;    /* Para centrar verticalmente el texto */
     text-align: center;
-    padding: 10px 0;
-    cursor: pointer;
-    position: relative;
-    z-index: 2;
+    vertical-align: middle;
     color: var(--color-dark-blue);
-    font-weight: bold;
     font-size: 14px;
-    transition: background-color 0.3s ease, transform 0.3s ease, color 0.3s ease;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s, color 0.3s;
+    box-sizing: border-box;
   }
   
-  /* Hover en cada opción */
+  /* Hover */
   .radio-input label:hover {
     background-color: rgba(240, 75, 74, 0.2);
     transform: scale(1.03);
   }
   
-  /* Franja resaltadora */
-  .selection {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 25%;
-    height: 100%;
-    background-color: var(--color-red);
-    border-radius: 9999px;
-    transform: translateX(0);
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 1;
-  }
-  
-  /* Movimiento de la franja según opción */
-  #radio1:checked ~ .selection { transform: translateX(0%); }
-  #radio2:checked ~ .selection { transform: translateX(100%); }
-  #radio3:checked ~ .selection { transform: translateX(200%); }
-  #radio4:checked ~ .selection { transform: translateX(300%); }
-  
-  /* Cambiar color del label al estar seleccionado */
+  /* El botón seleccionado se pone rojo y con texto blanco */
   #radio1:checked + label,
   #radio2:checked + label,
   #radio3:checked + label,
-  #radio4:checked + label {
+  #radio4:checked + label,
+  #radio5:checked + label {
+    background-color: var(--color-red);
     color: #fff;
   }
-  
-  /* ============================
-     Responsividad
-     ============================ */
-  @media (max-width: 768px) {
-    .radio-input {
-      max-width: 100%;
-      margin: 10px;
-    }
-    .radio-input label {
-      font-size: 12px;
-      padding: 8px 0;
-    }
+
+/* ============================
+       Responsividad
+       ============================ */
+@media (max-width: 768px) {
+  .radio-input {
+    max-width: 100%;
+    margin: 10px;
   }
-  
-  /* ============================
-     Contenido y Otros Componentes
-     ============================ */
-  main {
-    padding: 20px;
+
+  .radio-input label {
+    font-size: 12px;
+    padding: 8px 0;
   }
-  
-  /* Mensajes Toastr (los estilos propios de Toastr se cargarán con su CDN, pero puedes personalizarlos aquí si lo deseas) */
-  
-  /* Tablas */
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    background-color: #fff;
-  }
-  table, th, td {
-    border: 1px solid #ccc;
-  }
-  th, td {
-    padding: 8px;
-    text-align: left;
-  }
-  tbody tr:hover {
-    background-color: #f7f7f7;
-  }
-  
-  /* Formularios */
-  form {
-    margin-top: 20px;
-    max-width: 400px;
-  }
-  form label {
-    display: inline-block;
-    width: 100px;
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: var(--color-dark-blue);
-  }
-  form input[type="text"],
-  form input[type="number"],
-  form input[type="date"],
-  form select {
-    width: calc(100% - 110px);
-    padding: 6px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #fff;
-    color: var(--color-dark-blue);
-    font-size: 14px;
-  }
-  
-  /* Botones */
-  button,
-  input[type="submit"],
-  input[type="button"] {
-    background-color: var(--color-red);
-    color: var(--color-light);
-    border: none;
-    padding: 10px 16px;
-    cursor: pointer;
-    font-weight: bold;
-    margin-top: 8px;
-    border-radius: 4px;
-  }
-  button:hover,
-  input[type="submit"]:hover,
-  input[type="button"]:hover {
-    background-color: var(--color-mid-blue);
-  }
-  a.btn {
-    background-color: var(--color-red);
-    color: var(--color-light);
-    padding: 6px 12px;
-    text-decoration: none;
-    border-radius: 4px;
-    font-weight: bold;
-  }
-  a.btn:hover {
-    background-color: var(--color-mid-blue);
-  }
-  
-  /* Encabezados */
-  h1, h2, h3 {
-    margin-bottom: 15px;
-  }
-  
+}
+
+/* ============================
+       Contenido y Otros Componentes
+       ============================ */
+main {
+  padding: 20px;
+}
+
+/* Mensajes Toastr */
+.flashes {
+  list-style: none;
+  margin: 0 0 1em 0;
+  padding: 0;
+}
+
+.flashes li.success {
+  color: green;
+}
+
+.flashes li.error {
+  color: red;
+}
+
+/* Tablas */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background-color: #fff;
+}
+
+table,
+th,
+td {
+  border: 1px solid #ccc;
+}
+
+th,
+td {
+  padding: 8px;
+  text-align: left;
+}
+
+tbody tr:hover {
+  background-color: #f7f7f7;
+}
+
+/* Formularios */
+form {
+  margin-top: 20px;
+  max-width: 400px;
+}
+
+form label {
+  display: inline-block;
+  width: 100px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: var(--color-dark-blue);
+}
+
+form input[type="text"],
+form input[type="number"],
+form input[type="date"],
+form select {
+  width: calc(100% - 110px);
+  padding: 6px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  color: var(--color-dark-blue);
+  font-size: 14px;
+}
+
+/* Botones */
+button,
+input[type="submit"],
+input[type="button"] {
+  background-color: var(--color-red);
+  color: var(--color-light);
+  border: none;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 8px;
+  border-radius: 4px;
+}
+
+button:hover,
+input[type="submit"]:hover,
+input[type="button"]:hover {
+  background-color: var(--color-mid-blue);
+}
+
+a.btn {
+  background-color: var(--color-red);
+  color: var(--color-light);
+  padding: 6px 12px;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+a.btn:hover {
+  background-color: var(--color-mid-blue);
+}
+
+/* Encabezados */
+h1,
+h2,
+h3 {
+  margin-bottom: 15px;
+}
+
+/* Botón animado (opcional) */
+.animated-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 16px 36px;
+  border: 4px solid;
+  border-color: transparent;
+  font-size: 16px;
+  background-color: inherit;
+  border-radius: 100px;
+  font-weight: 600;
+  color: #f04b4a;
+  box-shadow: 0 0 0 2px #f04b4a;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  transform: scale(0.8);
+  transform-origin: center;
+}
+
+.animated-button svg {
+  position: absolute;
+  width: 24px;
+  fill: #f04b4a;
+  z-index: 9;
+  transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.animated-button .arr-1 {
+  right: 16px;
+}
+
+.animated-button .arr-2 {
+  left: -25%;
+}
+
+.animated-button .circle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  background-color: #f04b4a;
+  border-radius: 50%;
+  opacity: 0;
+  transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.animated-button .text {
+  position: relative;
+  z-index: 1;
+  transform: translateX(-12px);
+  transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.animated-button:hover {
+  box-shadow: 0 0 0 12px transparent;
+  color: #ffffff;
+  border-radius: 12px;
+}
+
+.animated-button:hover .arr-1 {
+  right: -25%;
+}
+
+.animated-button:hover .arr-2 {
+  left: 16px;
+}
+
+.animated-button:hover .text {
+  transform: translateX(12px);
+}
+
+.animated-button:hover svg {
+  fill: #ffffff;
+}
+
+.animated-button:active {
+  scale: 0.95;
+  box-shadow: 0 0 0 4px #f04b4a;
+}
+
+.animated-button:hover .circle {
+  width: 220px;
+  height: 220px;
+  opacity: 1;
+}
+
+.animated-button-container {
+  display: flex;
+  justify-content: center;
+  align-items: left;
+  height: 40px;
+  width: 200px;
+  margin: left 550px;
+}

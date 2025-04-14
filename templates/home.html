@@ -3,11 +3,15 @@
 {% block title %}Inicio - Gestión de Ventas{% endblock %}
 
 {% block content %}
-<h2>Bienvenido a la Gestión de Ventas</h2>
-<p>Utiliza el menú para navegar y gestionar la información.</p>
+  <h2>Bienvenido a la Gestión de Ventas</h2>
+  <p>Utiliza el menú para navegar y gestionar la información.</p>
 
-<!-- Dashboard sencillo -->
-<div style="max-width: 600px; margin: 30px auto;">
-  <canvas id="salesChart" aria-label="Gráfico de ventas" role="img"></canvas>
-</div>
+  <!-- Dashboard: Canvas para el gráfico -->
+  <div style="max-width: 600px; margin: 30px auto;">
+    <canvas id="salesChart" aria-label="Gráfico de ventas" role="img"></canvas>
+  </div>
+
+  <!-- Contenedor opcional para detalles al hacer clic -->
+  <div id="salesDetails" style="max-width:600px; margin:20px auto;"></div>
 {% endblock %}
+
