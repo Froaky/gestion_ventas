@@ -1,14 +1,15 @@
 {% extends "base.html" %}
 {% block title %}Crear Proveedor{% endblock %}
 {% block content %}
-<h2>Crear Proveedor</h2>
-<form method="POST">
-    <label for="name">Nombre:</label>
-    <input type="text" name="name" id="name" required>
-    <br><br>
-    <label for="telefono">Teléfono:</label>
-    <input type="text" name="telefono" id="telefono" required>
-    <br><br>
+<h2 style="text-align: center; color: #fff;">Crear Proveedor</h2>
+
+<div class="centered-container">
+  <form method="POST" class="form">
+    <input type="text" name="name" id="name" class="input" placeholder="Nombre del proveedor" required>
+    <input type="text" name="telefono" id="telefono" class="input" placeholder="Teléfono" required>
+
     <button type="submit">Crear</button>
-</form>
+  </form>
+</div>
 {% endblock %}
+``

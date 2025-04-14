@@ -49,54 +49,59 @@ footer {
 /* ============================
    Menú de Navegación con Radio Buttons (5 botones)
    ============================ */
-   .radio-input {
-    position: relative;
-    width: 700px;      /* Ajustalo a tu gusto */
-    margin: 20px auto; /* Centrado horizontal */
-    border-radius: 9999px;
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    background-color: #fff;
-    font-size: 0;      /* Evita espacios en blanco entre inline-blocks */
-    display: inline-block;
-    overflow: hidden;
-  }
-  
-  /* Ocultamos los radios */
-  .radio-input input {
-    display: none;
-  }
-  
-  /* Cada label ocupa 20% del contenedor */
-  .radio-input label {
-    display: inline-block;
-    width: 20%;
-    height: 50px;         /* Ajustá la altura a tu gusto */
-    line-height: 50px;    /* Para centrar verticalmente el texto */
-    text-align: center;
-    vertical-align: middle;
-    color: var(--color-dark-blue);
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.3s, color 0.3s;
-    box-sizing: border-box;
-  }
-  
-  /* Hover */
-  .radio-input label:hover {
-    background-color: rgba(240, 75, 74, 0.2);
-    transform: scale(1.03);
-  }
-  
-  /* El botón seleccionado se pone rojo y con texto blanco */
-  #radio1:checked + label,
-  #radio2:checked + label,
-  #radio3:checked + label,
-  #radio4:checked + label,
-  #radio5:checked + label {
-    background-color: var(--color-red);
-    color: #fff;
-  }
+.radio-input {
+  position: relative;
+  width: 700px;
+  /* Ajustalo a tu gusto */
+  margin: 20px auto;
+  /* Centrado horizontal */
+  border-radius: 9999px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  background-color: #fff;
+  font-size: 0;
+  /* Evita espacios en blanco entre inline-blocks */
+  display: inline-block;
+  overflow: hidden;
+}
+
+/* Ocultamos los radios */
+.radio-input input {
+  display: none;
+}
+
+/* Cada label ocupa 20% del contenedor */
+.radio-input label {
+  display: inline-block;
+  width: 20%;
+  height: 50px;
+  /* Ajustá la altura a tu gusto */
+  line-height: 50px;
+  /* Para centrar verticalmente el texto */
+  text-align: center;
+  vertical-align: middle;
+  color: var(--color-dark-blue);
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s, color 0.3s;
+  box-sizing: border-box;
+}
+
+/* Hover */
+.radio-input label:hover {
+  background-color: rgba(240, 75, 74, 0.2);
+  transform: scale(1.03);
+}
+
+/* El botón seleccionado se pone rojo y con texto blanco */
+#radio1:checked+label,
+#radio2:checked+label,
+#radio3:checked+label,
+#radio4:checked+label,
+#radio5:checked+label {
+  background-color: var(--color-red);
+  color: #fff;
+}
 
 /* ============================
        Responsividad
@@ -326,3 +331,188 @@ h3 {
   width: 200px;
   margin: left 550px;
 }
+
+/* ============================
+       card de catalogo
+       ============================ */
+.catalog {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.card {
+  position: relative;
+  width: 11.875em;
+  height: 16.5em;
+  box-shadow: 0px 1px 13px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 120ms;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  padding: 0.5em;
+  padding-bottom: 3.4em;
+}
+
+.card::after {
+  content: "Ver";
+  padding-top: 1.25em;
+  padding-left: 1.25em;
+  position: absolute;
+  left: 0;
+  bottom: -60px;
+  background: #00AC7C;
+  color: #fff;
+  height: 2.5em;
+  width: 90%;
+  transition: all 80ms;
+  font-weight: 600;
+  text-transform: uppercase;
+  opacity: 0;
+}
+
+.card .title {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.9em;
+  position: absolute;
+  left: 0.625em;
+  bottom: 1.875em;
+  font-weight: 400;
+  color: #000;
+}
+
+.card .price {
+  font-family: Impact, Haettenschweiler, 'Roboto', sans-serif;
+  font-size: 0.9em;
+  position: absolute;
+  left: 0.625em;
+  bottom: 0.625em;
+  color: #000;
+}
+
+.card:hover::after {
+  bottom: 0;
+  opacity: 1;
+}
+
+.card:active {
+  transform: scale(0.98);
+}
+
+.card:active::after {
+  content: "Corregir esto";
+  height: 3.125em;
+}
+
+.text {
+  max-width: 55px;
+}
+
+.image {
+  background: rgb(241, 241, 241);
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+}
+
+/* ============================
+   Formulario Animado 3D (Uiverse Adaptado)
+   ============================ */
+
+   .form {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 50px 40px;
+    width: 500px; /* Más ancho */
+    background: var(--color-dark-blue);
+    border-radius: 12px;
+    overflow: hidden;
+    perspective: 1000px;
+    transform-style: preserve-3d;
+    transform: rotateX(-10deg);
+    transition: all 0.3s ease-in-out;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
+                rgba(0, 0, 0, 0.3) 0px 7px 13px -3px,
+                rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+    animation: form-animation 0.5s ease-in-out;
+  }
+  
+  @keyframes form-animation {
+    from {
+      transform: rotateX(-30deg);
+      opacity: 0;
+    }
+    to {
+      transform: rotateX(0deg);
+      opacity: 1;
+    }
+  }
+  
+  .centered-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 85vh; /* Centrado en pantalla */
+  }
+  
+  .input,
+  .form select {
+    padding: 15px 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    background-color: var(--color-light); /* Fondo claro para contraste */
+    color: var(--color-dark-blue); /* Texto oscuro */
+    border: 2px solid var(--color-mid-blue);
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 4px,
+                rgba(0, 0, 0, 0.2) 0px 7px 13px -3px,
+                rgba(0, 0, 0, 0.1) 0px -3px 0px inset;
+    font-size: 16px;
+  }
+  
+  .input::placeholder {
+    color: var(--color-dark-blue); /* Color visible en fondo claro */
+  }
+  
+  .input:hover,
+  .input:focus,
+  .form select:hover,
+  .form select:focus {
+    border-color: var(--color-mid-blue);
+    background-color: var(--color-light); /* Conserva el contraste en hover */
+    transform: scale(1.05) rotateY(10deg);
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
+    outline: none;
+  }
+  
+  .form button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--color-red);
+    color: var(--color-light);
+    font-size: 16px;
+    cursor: pointer;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    transform: rotateX(-10deg);
+    transition: all 0.3s ease-in-out;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
+                rgba(0, 0, 0, 0.3) 0px 7px 13px -3px,
+                rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+  }
+  
+  .form button:hover {
+    background-color: var(--color-mid-blue);
+    font-size: 17px;
+    transform: scale(1.05) rotateY(20deg) rotateX(10deg);
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
+                rgba(0, 0, 0, 0.3) 0px 7px 13px -3px,
+                rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+  }
+  

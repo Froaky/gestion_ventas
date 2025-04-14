@@ -7,6 +7,7 @@ from services.productos_service import (
     delete_producto
 )
 from models.producto import Producto  # Para obtener un objeto en vistas de edición
+from models.proveedor import Proveedor
 
 bp = Blueprint('productos', __name__, url_prefix='/productos')
 
@@ -54,16 +55,19 @@ def lista_productos():
 
 @bp.route('/crear', methods=['GET', 'POST'])
 def crear_producto_view():
+    proveedores = Proveedor.query.all()
+
     if request.method == 'POST':
-        name = request.form.get('name')
-        precio = request.form.get('precio')
-        stock = request.form.get('stock')
-        categoria = request.form.get('categoria')
-        proveedor_id = request.form.get('proveedor_id')
+        name = request.form['name']
+        precio = request.form['precio']
+        stock = request.form['stock']
+        categoria = request.form['categoria']
+        proveedor_id = request.form['proveedor_id']  # ahora es un ID
+
         create_producto(name, precio, stock, categoria, proveedor_id)
-        flash('Producto creado correctamente', 'success')
         return redirect(url_for('productos.lista_productos'))
-    return render_template('productos/crear.html')
+
+    return render_template('productos/crear.html', proveedores=proveedores)
 
 @bp.route('/editar/<int:id>', methods=['GET', 'POST'])
 def editar_producto_view(id):
@@ -84,3 +88,8 @@ def eliminar_producto_view(id):
     delete_producto(id)
     flash('Producto eliminado correctamente', 'success')
     return redirect(url_for('productos.lista_productos'))
+
+@bp.route("/catalogo")
+def catalogo():
+    lista_de_productos = get_all_productos()
+    return render_template('productos/catalogo.html', products=lista_de_productos)

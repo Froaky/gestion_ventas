@@ -1,4 +1,4 @@
-import datetime  # Puedes mantenerlo si lo necesitás en algún otro lugar
+import datetime
 from flask import Blueprint, request, jsonify, render_template, redirect, url_for, flash
 from services.ventas_service import (
     get_all_ventas,
@@ -7,7 +7,7 @@ from services.ventas_service import (
     delete_venta,
     get_ventas_ultimos_5_meses
 )
-from models.venta import Venta  # Para usarlo en vistas de edición, por ejemplo
+from models.venta import Venta
 
 bp = Blueprint('ventas', __name__, url_prefix='/ventas')
 
@@ -24,6 +24,7 @@ def create_venta_api():
     nueva = create_venta(
         cliente_id=data.get('cliente_id'),
         total=float(data.get('total', 0.0))
+        # Aquí podrías agregar productos si implementás lógica en el API también
     )
     return jsonify(nueva.to_dict()), 201
 
@@ -57,15 +58,19 @@ def lista_ventas():
 @bp.route('/crear', methods=['GET', 'POST'])
 def crear_venta_view():
     from models.cliente import Cliente
-    from models.producto import Producto  # Si necesitás mostrar productos o detalles
+    from models.producto import Producto
     clientes = Cliente.query.all()
-    productos = Producto.query.all()  # Opcional
+    productos = Producto.query.all()
+
     if request.method == 'POST':
         cliente_id = request.form.get('cliente_id')
         total = float(request.form.get('total', 0.0))
-        create_venta(cliente_id, total)
+        producto_ids = request.form.getlist('producto_ids')  # 👈 agregado para recibir productos
+
+        create_venta(cliente_id, total, producto_ids)  # 👈 ahora incluye productos
         flash('Venta creada correctamente', 'success')
         return redirect(url_for('ventas.lista_ventas'))
+
     return render_template('ventas/crear.html', clientes=clientes, productos=productos)
 
 @bp.route('/editar/<int:id>', methods=['GET', 'POST'])

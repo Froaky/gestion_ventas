@@ -3,14 +3,25 @@ import datetime
 from sqlalchemy import cast, DateTime
 from models import db
 from models.venta import Venta
+from models.producto import Producto  # si no está ya importado
 
 def get_all_ventas():
     return Venta.query.all()
 
-def create_venta(cliente_id, total):
+
+def create_venta(cliente_id, total, producto_ids=None):
     nueva_venta = Venta(cliente_id=cliente_id, total=total)
     db.session.add(nueva_venta)
     db.session.commit()
+
+    if producto_ids:
+        for producto_id in producto_ids:
+            producto = Producto.query.get(int(producto_id))
+            if producto:
+                nueva_venta.productos.append(producto)  # relación many-to-many
+
+        db.session.commit()
+
     return nueva_venta
 
 def update_venta(id, cliente_id, total):

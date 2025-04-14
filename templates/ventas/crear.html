@@ -1,18 +1,30 @@
 {% extends "base.html" %}
 {% block title %}Crear Venta{% endblock %}
+
 {% block content %}
-<h2>Crear Venta</h2>
-<form method="POST">
-    <label for="cliente_id">Cliente:</label>
-    <select name="cliente_id" id="cliente_id" required>
-        {% for c in clientes %}
-            <option value="{{ c.id }}">{{ c.name }}</option>
-        {% endfor %}
+<h2 style="text-align: center; color: #fff;">Crear Venta</h2>
+
+<div class="centered-container">
+  <form method="POST" class="form">
+    <!-- Cliente -->
+    <select name="cliente_id" id="cliente_id" class="input" required>
+      <option value="" disabled selected>Seleccioná un cliente</option>
+      {% for c in clientes %}
+        <option value="{{ c.id }}">{{ c.name }}</option>
+      {% endfor %}
     </select>
-    <br><br>
-    <label for="total">Total:</label>
-    <input type="number" step="0.01" name="total" id="total" required>
-    <br><br>
+
+    <!-- Productos múltiples -->
+    <select name="producto_ids" id="producto_ids" class="input" multiple required>
+      {% for p in productos %}
+        <option value="{{ p.id }}">{{ p.name }}</option>
+      {% endfor %}
+    </select>
+
+    <!-- Total -->
+    <input type="number" step="0.01" name="total" id="total" class="input" placeholder="Total" required>
+
     <button type="submit">Crear</button>
-</form>
+  </form>
+</div>
 {% endblock %}
