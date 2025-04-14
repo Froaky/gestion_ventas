@@ -24,3 +24,5 @@ def delete_cliente(id):
 
 def search_clientes(nombre):
     return Cliente.query.filter(Cliente.name.ilike(f"%{nombre}%")).all()
+
+# Froaky 
