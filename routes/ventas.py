@@ -26,6 +26,7 @@ def create_venta_api():
         total=float(data.get('total', 0.0))
         # Aquí podrías agregar productos si implementás lógica en el API también
     )
+    
     return jsonify(nueva.to_dict()), 201
 
 @bp.route('/api/<int:id>', methods=['PUT'])
@@ -61,17 +62,51 @@ def crear_venta_view():
     from models.producto import Producto
     clientes = Cliente.query.all()
     productos = Producto.query.all()
+    productos_dicts = [p.to_dict() for p in productos]
+
 
     if request.method == 'POST':
         cliente_id = request.form.get('cliente_id')
-        total = float(request.form.get('total', 0.0))
-        producto_ids = request.form.getlist('producto_ids')  # 👈 agregado para recibir productos
+        raw_total = request.form.get('total', '').strip()
 
-        create_venta(cliente_id, total, producto_ids)  # 👈 ahora incluye productos
+        # Validación de total vacío o inválido
+        if not raw_total:
+            flash('El total no puede estar vacío. Asegúrate de seleccionar productos y cantidades.', 'danger')
+            return redirect(url_for('ventas.crear_venta_view'))
+
+        try:
+            total = float(raw_total)
+        except ValueError:
+            flash('El total ingresado no es válido.', 'danger')
+            return redirect(url_for('ventas.crear_venta_view'))
+
+        producto_data = []
+        index = 0
+        while True:
+            pid_key = f'productos_seleccionados[{index}][producto_id]'
+            qty_key = f'productos_seleccionados[{index}][cantidad]'
+            if pid_key in request.form and qty_key in request.form:
+                try:
+                    producto_data.append({
+                        'producto_id': int(request.form[pid_key]),
+                        'cantidad': int(request.form[qty_key])
+                    })
+                except ValueError:
+                    flash('Cantidad o producto inválido.', 'danger')
+                    return redirect(url_for('ventas.crear_venta_view'))
+                index += 1
+            else:
+                break
+
+
+        # Nota: Si tu servicio `create_venta` aún no acepta este formato, tendrás que ajustarlo también.
+        create_venta(cliente_id, total, producto_data)
         flash('Venta creada correctamente', 'success')
         return redirect(url_for('ventas.lista_ventas'))
 
-    return render_template('ventas/crear.html', clientes=clientes, productos=productos)
+    return render_template('ventas/crear.html', clientes=clientes, productos=productos_dicts)
+
+
 
 @bp.route('/editar/<int:id>', methods=['GET', 'POST'])
 def editar_venta_view(id):

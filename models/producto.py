@@ -3,6 +3,7 @@ from . import db
 
 class Producto(db.Model):
     __tablename__ = 'productos'
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     precio = db.Column(db.Float, nullable=True)
@@ -19,3 +20,7 @@ class Producto(db.Model):
             "categoria": self.categoria,
             "proveedor_id": self.proveedor_id
         }
+
+# IMPORTAR AL FINAL para evitar conflictos circulares
+from .producto_venta import VentaProducto
+Producto.ventas = db.relationship("VentaProducto", back_populates="producto")

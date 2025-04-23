@@ -126,3 +126,59 @@ document.addEventListener('DOMContentLoaded', () => {
   // Actualizar automáticamente cada 60 segundos (60000 milisegundos)
   setInterval(updateChartData, 60000);
 });
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  const productos = JSON.parse(document.getElementById('productosData')?.textContent || '[]');
+  const productosContainer = document.getElementById('productosContainer');
+  const totalInput = document.getElementById('total');
+  const addProductBtn = document.getElementById('addProduct');
+
+  function actualizarTotal() {
+    let total = 0;
+    const filas = productosContainer.querySelectorAll('.producto-row');
+
+    filas.forEach(fila => {
+      const select = fila.querySelector('select');
+      const cantidadInput = fila.querySelector('input[type="number"]');
+
+      const precio = parseFloat(select?.selectedOptions[0]?.dataset.precio || '0');
+      const cantidad = parseInt(cantidadInput.value || '0');
+      if (!isNaN(precio) && !isNaN(cantidad)) {
+        total += precio * cantidad;
+      }
+    });
+
+    totalInput.value = total.toFixed(2);
+  }
+
+  productosContainer.addEventListener('change', actualizarTotal);
+  productosContainer.addEventListener('input', actualizarTotal);
+
+  addProductBtn.addEventListener('click', () => {
+    const index = productosContainer.querySelectorAll('.producto-row').length;
+    const nuevaFila = document.createElement('div');
+    nuevaFila.classList.add('producto-row');
+    nuevaFila.style.marginTop = '10px';
+
+    nuevaFila.innerHTML = `
+      <select name="productos_seleccionados[${index}][producto_id]" class="form-control producto-select" required>
+        <option value="" disabled selected>Selecciona un producto</option>
+        ${productos.map(p => `<option value="${p.id}" data-precio="${p.precio}">${p.name} (${p.stock} en stock)</option>`).join('')}
+      </select>
+      <input type="number" name="productos_seleccionados[${index}][cantidad]" class="form-control cantidad-input" placeholder="Cantidad" min="1" value="1" required>
+    `;
+
+    productosContainer.appendChild(nuevaFila);
+  });
+
+  // validación final antes de enviar (ya estaba en tu HTML)
+  document.getElementById('ventaForm')?.addEventListener('submit', function (e) {
+    if (!totalInput.value || parseFloat(totalInput.value) <= 0) {
+      e.preventDefault();
+      alert('Debes seleccionar productos válidos y cantidades para calcular el total antes de enviar.');
+    }
+  });
+
+  actualizarTotal(); // calcular al inicio
+});

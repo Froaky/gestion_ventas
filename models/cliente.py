@@ -1,3 +1,4 @@
+# models/cliente.py
 from . import db
 
 class Cliente(db.Model):

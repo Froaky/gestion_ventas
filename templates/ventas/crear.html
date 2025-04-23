@@ -2,29 +2,48 @@
 {% block title %}Crear Venta{% endblock %}
 
 {% block content %}
-<h2 style="text-align: center; color: #fff;">Crear Venta</h2>
+<div class="container">
+  <h2 class="text-center">Crear Nueva Venta</h2>
 
-<div class="centered-container">
-  <form method="POST" class="form">
+  <form method="POST" class="form" id="ventaForm">
     <!-- Cliente -->
-    <select name="cliente_id" id="cliente_id" class="input" required>
-      <option value="" disabled selected>Seleccioná un cliente</option>
-      {% for c in clientes %}
-        <option value="{{ c.id }}">{{ c.name }}</option>
-      {% endfor %}
-    </select>
+    <div class="form-group">
+      <label for="cliente_id">Cliente</label>
+      <select name="cliente_id" id="cliente_id" class="form-control" required>
+        <option value="" disabled selected>Selecciona un cliente</option>
+        {% for cliente in clientes %}
+          <option value="{{ cliente.id }}">{{ cliente.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
 
-    <!-- Productos múltiples -->
-    <select name="producto_ids" id="producto_ids" class="input" multiple required>
-      {% for p in productos %}
-        <option value="{{ p.id }}">{{ p.name }}</option>
-      {% endfor %}
-    </select>
+    <!-- Productos con cantidad -->
+    <div class="form-group" id="productosContainer">
+      <label>Productos</label>
+      <button type="button" class="btn btn-secondary btn-sm" id="addProduct">Añadir Producto</button>
 
-    <!-- Total -->
-    <input type="number" step="0.01" name="total" id="total" class="input" placeholder="Total" required>
+      <div class="producto-row" style="margin-top: 10px;">
+        <select name="productos_seleccionados[0][producto_id]" class="form-control producto-select" required>
+          <option value="" disabled selected>Selecciona un producto</option>
+          {% for producto in productos %}
+            <option value="{{ producto.id }}" data-precio="{{ producto.precio }}">{{ producto.name }} ({{ producto.stock }} en stock)</option>
+          {% endfor %}
+        </select>
+        <input type="number" name="productos_seleccionados[0][cantidad]" class="form-control cantidad-input" placeholder="Cantidad" min="1" value="1" required>
+      </div>
+    </div>
 
-    <button type="submit">Crear</button>
+    <!-- Total calculado automáticamente -->
+    <div class="form-group">
+      <label for="total">Total ($)</label>
+      <input type="number" step="0.01" name="total" id="total" class="form-control" readonly>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Crear Venta</button>
   </form>
 </div>
+
+<script id="productosData" type="application/json">
+  {{ productos | tojson }}
+</script>
 {% endblock %}

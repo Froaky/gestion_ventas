@@ -4,25 +4,42 @@ from sqlalchemy import cast, DateTime
 from models import db
 from models.venta import Venta
 from models.producto import Producto  # si no está ya importado
+from models.producto_venta import VentaProducto
 
 def get_all_ventas():
     return Venta.query.all()
 
-
-def create_venta(cliente_id, total, producto_ids=None):
+def create_venta(cliente_id, total, productos_seleccionados):
     nueva_venta = Venta(cliente_id=cliente_id, total=total)
     db.session.add(nueva_venta)
+
+    for item in productos_seleccionados:
+        producto_id = item.get('producto_id')
+        cantidad = item.get('cantidad')
+
+        producto = Producto.query.get(producto_id)
+        if not producto:
+            raise ValueError(f"Producto con ID {producto_id} no encontrado.")
+
+        if producto.stock is None:
+            raise ValueError(f"El producto '{producto.name}' no tiene stock definido.")
+
+        if producto.stock < cantidad:
+            raise ValueError(f"Stock insuficiente para el producto '{producto.name}'. Stock disponible: {producto.stock}, solicitado: {cantidad}")
+
+        venta_producto = VentaProducto(
+            venta=nueva_venta,
+            producto=producto,
+            cantidad=cantidad,
+            precio_unitario=producto.precio
+        )
+        db.session.add(venta_producto)
+        producto.stock -= cantidad
+
     db.session.commit()
-
-    if producto_ids:
-        for producto_id in producto_ids:
-            producto = Producto.query.get(int(producto_id))
-            if producto:
-                nueva_venta.productos.append(producto)  # relación many-to-many
-
-        db.session.commit()
-
     return nueva_venta
+
+
 
 def update_venta(id, cliente_id, total):
     venta = Venta.query.get_or_404(id)

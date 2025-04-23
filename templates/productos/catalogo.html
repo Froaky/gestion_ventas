@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Catálogo{% endblock %}
+{% block content %}
+  <h2>Catálogo</h2>
+  
+  <!-- Formulario de búsqueda -->
+  <form method="POST">
+      <label for="nombre">Nombre:</label>
+      <input type="text" id="nombre" name="nombre" required>
+      <button type="submit">Buscar</button>
+  </form>
+  
+  <!-- Contenedor para las tarjetas de productos -->
+  <div class="catalog">
+    {% for product in products %}
+      <div class="card">
+        <div class="image">
+          {% if product.image_url %}
+            <img src="{{ product.image_url }}" alt="{{ product.name }}">
+          {% else %}
+            <span class="text">This is a chair.</span>
+          {% endif %}
+        </div>
+        <span class="title">{{ product.name }}</span>
+        <span class="price">${{ product.precio }}</span>
+      </div>
+    {% else %}
+      <p>No se encontraron productos.</p>
+    {% endfor %}
+  </div>
+{% endblock %}
