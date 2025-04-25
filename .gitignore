@@ -30,3 +30,10 @@ Thumbs.db
 .idea/
 *.swp
 
+#sqlite
+*.sqlite
+*.sqlite3
+*.db
+*.db3
+*.sql
+*.dump
