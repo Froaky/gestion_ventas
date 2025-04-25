@@ -1,9 +1,38 @@
 {% extends "base.html" %}
 {% block title %}Listado de Productos{% endblock %}
+
 {% block content %}
 <h2>Listado de Productos</h2>
-<a href="{{ url_for('productos.crear_producto_view') }}">Crear nuevo producto</a>
-<table>
+
+<!-- Controles de orden -->
+<div class="leyenda-colores" style="margin-bottom: 1rem;">
+  <strong>Ordenar por:</strong>
+  <button class="ordenar-btn" data-sort="stock">Stock</button>
+  <button class="ordenar-btn" data-sort="nombre">Nombre (A-Z)</button>
+  <button class="ordenar-btn" data-sort="categoria">Categoría</button>
+  <button class="ordenar-btn" data-sort="proveedor">Proveedor</button>
+  <button id="reset-order">🔄 Restaurar orden</button>
+</div>
+
+<!-- Leyenda visual de colores -->
+<div class="leyenda-colores" style="margin-bottom: 1rem;">  
+  <ul style="list-style: none; padding-left: 0; display: flex; gap: 1rem;">
+    <li style="display: flex; align-items: center;">
+      <span class="color-box bg-sin-stock"></span> Sin stock
+    </li>
+    <li style="display: flex; align-items: center;">
+      <span class="color-box bg-bajo-stock"></span> Stock bajo (1–2)
+    </li>
+    <li style="display: flex; align-items: center;">
+      <span class="color-box bg-stock-ok"></span> Stock suficiente (3+)
+    </li>
+  </ul>
+</div>
+
+<a href="{{ url_for('productos.crear_producto_view') }}"><button class="ordenar-btn" data-sort="stock">Crear nuevo producto</button></a>
+
+<!-- Tabla con atributos de ordenamiento -->
+<table id="tabla-stock">
   <thead>
     <tr>
       <th>ID</th>
@@ -17,19 +46,24 @@
   </thead>
   <tbody>
     {% for p in productos %}
-    <tr>
-      <td>{{ p.id }}</td>
-      <td>{{ p.name }}</td>
-      <td>{{ p.precio }}</td>
-      <td>{{ p.stock }}</td>
-      <td>{{ p.categoria }}</td>
-      <td>{{ p.proveedor_id }}</td>
-      <td>
-        <a href="{{ url_for('productos.editar_producto_view', id=p.id) }}">Editar</a> |
-        <a href="{{ url_for('productos.eliminar_producto_view', id=p.id) }}">Eliminar</a>
-      </td>
-    </tr>
-    {% endfor %}
+<tr
+  data-stock="{{ p.stock }}"
+  data-categoria="{{ p.categoria | lower }}"
+  data-proveedor="{{ proveedores[p.proveedor_id] | lower }}"
+  data-nombre="{{ p.name | lower }}"
+>
+  <td>{{ p.id }}</td>
+  <td>{{ p.name }}</td>
+  <td>{{ p.precio }}</td>
+  <td>{{ p.stock }}</td>
+  <td>{{ p.categoria }}</td>
+  <td>{{ proveedores[p.proveedor_id] }}</td>
+  <td>
+    <a href="{{ url_for('productos.editar_producto_view', id=p.id) }}">Editar</a> |
+    <a href="{{ url_for('productos.eliminar_producto_view', id=p.id) }}">Eliminar</a>
+  </td>
+</tr>
+{% endfor %}
   </tbody>
 </table>
 {% endblock %}

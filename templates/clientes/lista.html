@@ -3,7 +3,7 @@
 {% block title %}Listado de Clientes{% endblock %}
 {% block content %}
 <h2>Listado de Clientes</h2>
-<a href="{{ url_for('clientes.crear_cliente_view') }}">Crear nuevo cliente</a>
+<a href="{{ url_for('clientes.crear_cliente_view') }}"><button class="ordenar-btn" data-sort="stock">Crear nuevo cliente</button></a>
 <table>
     <thead>
         <tr>
