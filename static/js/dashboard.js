@@ -182,3 +182,71 @@ document.addEventListener('DOMContentLoaded', () => {
 
   actualizarTotal(); // calcular al inicio
 });
+
+ // Script para pintar según stock y ordenar columnas en la tabla de productos
+document.addEventListener("DOMContentLoaded", () => {
+  const tabla = document.getElementById("tabla-stock");
+  if (!tabla) return; // Solo aplica si existe la tabla con id "tabla-stock"
+
+  const tbody = tabla.querySelector("tbody");
+  const filasOriginales = Array.from(tbody.querySelectorAll("tr"));
+
+    // Pintar filas según el stock
+  const pintarFilas = filas => {
+    filas.forEach(fila => {
+      const stock = parseInt(fila.dataset.stock);
+      fila.classList.remove("sin-stock", "bajo-stock", "stock-ok");
+
+      if (!isNaN(stock)) {
+        if (stock < 1) {
+          fila.classList.add("sin-stock");
+        } else if (stock>0 && stock<= 2 ) {
+          fila.classList.add("bajo-stock");
+        } else {
+          fila.classList.add("stock-ok");
+        }
+      }
+    });
+  };
+
+    // Pintar al cargar
+  pintarFilas(filasOriginales);
+
+    // Función para ordenar por cualquier campo
+  const ordenarPor = campo => {
+    const filasOrdenadas = [...filasOriginales].sort((a, b) => {
+      const valA = a.dataset[campo];
+      const valB = b.dataset[campo];
+
+      if (campo === "stock") {
+        return parseInt(valA) - parseInt(valB);
+      } else {
+        return valA.localeCompare(valB);
+      }
+    });
+
+    tbody.innerHTML = "";
+    filasOrdenadas.forEach(f => tbody.appendChild(f));
+    pintarFilas(filasOrdenadas);
+  };
+
+    // Botones de ordenar
+  const botonesOrdenar = document.querySelectorAll(".ordenar-btn");
+  botonesOrdenar.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const campo = btn.dataset.sort;
+      ordenarPor(campo);
+    });
+  });
+
+    // Botón para restaurar el orden original
+  const resetBtn = document.getElementById("reset-order");
+  if (resetBtn) {
+    resetBtn.addEventListener("click", () => {
+      tbody.innerHTML = "";
+      filasOriginales.forEach(f => tbody.appendChild(f));
+      pintarFilas(filasOriginales);
+    });
+  }
+});
+// fIN Scripts productos 

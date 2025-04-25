@@ -515,4 +515,82 @@ h3 {
                 rgba(0, 0, 0, 0.3) 0px 7px 13px -3px,
                 rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   }
+ 
+
+  .color-box {
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    border: 1px solid #ccc;
+    margin-right: 5px;
+  }
   
+  /* Colores de fondo solamente productos/lista*/
+  .bg-sin-stock {
+    background-color: #ffe5e5;
+  }
+  
+  .bg-bajo-stock {
+    background-color: #fffacc;
+  }
+  
+  .bg-stock-ok {
+    background-color: #e5ffe5;
+  }
+  /*Colores stock en productos/lista*/
+.sin-stock {
+  background-color: #ffe5e5;
+  color: #a00000;
+  font-weight: bold;
+}
+
+.bajo-stock {
+  background-color: #fffacc;
+  color: #a08000;
+  font-weight: bold;
+}
+
+.stock-ok {
+  background-color: #e5ffe5;
+  color: #007000;
+  font-weight: bold;
+}
+
+.color-box {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  border: 1px solid #ccc;
+  margin-right: 5px;
+}
+
+.bg-sin-stock {
+  background-color: #ffe5e5;
+}
+
+.bg-bajo-stock {
+  background-color: #fffacc;
+}
+
+.bg-stock-ok {
+  background-color: #e5ffe5;
+}
+
+.ordenar-btn,
+#reset-order {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.9rem;
+  border: 1px solid #405a86;
+  background-color: white;
+  color: #405a86;
+  border-radius: 4px;
+  cursor: pointer;
+  min-width: 120px;
+  text-align: center;
+  transition: background-color 0.2s ease;
+}
+
+.ordenar-btn:hover,
+#reset-order:hover {
+  background-color: #e6f0ff;
+}

@@ -48,10 +48,15 @@ def delete_producto_api(id):
     return jsonify({"message": "Producto eliminado"}), 204
 
 # --- Vistas HTML ---
+#@bp.route('/lista', methods=['GET'])
+#def lista_productos():
+ #   productos = get_all_productos()
+  #  return render_template('productos/lista.html', productos=productos)
 @bp.route('/lista', methods=['GET'])
 def lista_productos():
     productos = get_all_productos()
-    return render_template('productos/lista.html', productos=productos)
+    proveedores = {p.id: p.name for p in Proveedor.query.all()}  # <- clave: ID, valor: nombre
+    return render_template('productos/lista.html', productos=productos, proveedores=proveedores)
 
 @bp.route('/crear', methods=['GET', 'POST'])
 def crear_producto_view():
