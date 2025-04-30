@@ -22,7 +22,8 @@
             <td>{{ v.total }}</td>
             <td>
                 <a href="{{ url_for('ventas.editar_venta_view', id=v.id) }}">Editar</a> |
-                <a href="{{ url_for('ventas.eliminar_venta_view', id=v.id) }}">Eliminar</a>
+                <a href="{{ url_for('ventas.eliminar_venta_view', id=v.id) }}">Eliminar</a> |
+                <a href="{{ url_for('ventas.ver_venta_view', id=v.id) }}">Ver</a>
             </td>
         </tr>
         {% endfor %}

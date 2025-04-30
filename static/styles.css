@@ -167,7 +167,7 @@ tbody tr:hover {
 /* Formularios */
 form {
   margin-top: 20px;
-  max-width: 400px;
+  max-width: 400px; 
 }
 
 form label {
@@ -456,6 +456,7 @@ h3 {
   
   .centered-container {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     min-height: 85vh; /* Centrado en pantalla */
@@ -515,4 +516,24 @@ h3 {
                 rgba(0, 0, 0, 0.3) 0px 7px 13px -3px,
                 rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   }
+
+  /* select - 2  vista */
+  .select2-container--default .select2-selection--single {
+    background-color: #f8f9fa;
+    border: 2px solid #007bff;
+    border-radius: 10px;
+    padding: 2px;
+    height: 45px;
+    width: 305px;
+  }
   
+  .select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #343a40;
+    font-weight: bold;
+  }
+
+  .select2-container--default .select2-selection--single .select2-selection__placeholder,
+.select2-container--bootstrap-5 .select2-selection--single .select2-selection__placeholder {
+  color: #343a40 !important;
+  font-weight: bold !important;
+}

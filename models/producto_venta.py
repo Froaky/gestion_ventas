@@ -11,3 +11,12 @@ class VentaProducto(db.Model):
 
     producto = db.relationship("Producto", back_populates="ventas")
     venta = db.relationship("Venta", back_populates="productos")
+    
+    # def to_dict(self):
+    #     return {
+    #         'venta_id': self.venta_id,
+    #         'producto_id': self.producto_id,
+    #         'cantidad': self.cantidad,
+    #         'precio_unitario': self.precio_unitario
+    #     }
+    # por si acaso

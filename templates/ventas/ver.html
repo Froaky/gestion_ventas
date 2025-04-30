@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Ver Venta{% endblock %}
+
+{% block content %}
+
+    <h1>Venta #{{ venta['id'] }}</h1>
+<p>Fecha: {{ venta['fecha'] }}</p>
+<p>Cliente ID: {{ venta['cliente_id'] }}</p>
+<p>Total: {{ venta['total'] }}</p>
+
+<h2>Productos:</h2>
+<ul>
+  {% for producto in venta['productos'] %}
+    <li>
+      Producto: {{ producto['nombre'] }},
+      Cantidad: {{ producto['cantidad'] }},
+      Precio unitario : {{ producto['precio_unitario'] }}
+    </li>
+  {% endfor %}
+</ul>
+{% endblock %}

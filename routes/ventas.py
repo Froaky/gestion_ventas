@@ -5,6 +5,7 @@ from services.ventas_service import (
     create_venta,
     update_venta,
     delete_venta,
+    ver_venta,
     get_ventas_ultimos_5_meses
 )
 from models.venta import Venta
@@ -61,7 +62,7 @@ def crear_venta_view():
     from models.cliente import Cliente
     from models.producto import Producto
     clientes = Cliente.query.all()
-    productos = Producto.query.all()
+    productos = Producto.query.filter(Producto.stock > 0).all()
     productos_dicts = [p.to_dict() for p in productos]
 
 
@@ -131,3 +132,8 @@ def eliminar_venta_view(id):
 def home():
     labels, totals, counts = get_ventas_ultimos_5_meses()
     return render_template('home.html', labels=labels, totals=totals, counts=counts)
+
+@bp.route('/ver/<int:id>', methods=['GET'])
+def ver_venta_view(id):
+    venta = ver_venta(id)
+    return render_template('ventas/ver.html', venta=venta)

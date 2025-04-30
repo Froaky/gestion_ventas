@@ -12,7 +12,7 @@ def get_all_ventas():
 def create_venta(cliente_id, total, productos_seleccionados):
     nueva_venta = Venta(cliente_id=cliente_id, total=total)
     db.session.add(nueva_venta)
-
+    
     for item in productos_seleccionados:
         producto_id = item.get('producto_id')
         cantidad = item.get('cantidad')
@@ -22,7 +22,7 @@ def create_venta(cliente_id, total, productos_seleccionados):
             raise ValueError(f"Producto con ID {producto_id} no encontrado.")
 
         if producto.stock is None:
-            raise ValueError(f"El producto '{producto.name}' no tiene stock definido.")
+             raise ValueError(f"El producto '{producto.name}' no tiene stock definido.")
 
         if producto.stock < cantidad:
             raise ValueError(f"Stock insuficiente para el producto '{producto.name}'. Stock disponible: {producto.stock}, solicitado: {cantidad}")
@@ -53,6 +53,9 @@ def delete_venta(id):
     db.session.delete(venta)
     db.session.commit()
 
+def ver_venta(id):
+    venta = Venta.query.get_or_404(id)
+    return venta.to_dict()
 
 def get_ventas_ultimos_5_meses():
     """

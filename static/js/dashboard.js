@@ -162,14 +162,26 @@ document.addEventListener('DOMContentLoaded', () => {
     nuevaFila.style.marginTop = '10px';
 
     nuevaFila.innerHTML = `
-      <select name="productos_seleccionados[${index}][producto_id]" class="form-control producto-select" required>
+      <select name="productos_seleccionados[${index}][producto_id]" class="js-example-basic-single" required>
         <option value="" disabled selected>Selecciona un producto</option>
-        ${productos.map(p => `<option value="${p.id}" data-precio="${p.precio}">${p.name} (${p.stock} en stock)</option>`).join('')}
+        ${productos.map(p => `<optgroup label="${p.categoria}"><option value="${p.id}" data-precio="${p.precio}">${p.name} (${p.stock} en stock)</option></optgroup>`).join('')}
       </select>
-      <input type="number" name="productos_seleccionados[${index}][cantidad]" class="form-control cantidad-input" placeholder="Cantidad" min="1" value="1" required>
+      <br><br><input type="number" name="productos_seleccionados[${index}][cantidad]" class="form-control cantidad-input" placeholder="Cantidad" min="1" value="1" required>
     `;
 
     productosContainer.appendChild(nuevaFila);
+
+    // Inicializar select2 en el nuevo select
+    const select = nuevaFila.querySelector('select');
+    select.style.backgroundColor = '#f8f9fa';
+    select.style.border = '2px solid #007bff';
+    select.style.borderRadius = '10px';
+    select.style.padding = '2px';
+    select.style.height = '45px';
+    $(select).select2({
+      placeholder: 'Selecciona un producto',
+     
+    });
   });
 
   // validación final antes de enviar (ya estaba en tu HTML)
