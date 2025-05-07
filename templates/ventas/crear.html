@@ -17,23 +17,38 @@
       </select>
     </div>
 
-    <!-- Productos con cantidad -->
-    <div class="form-group" id="productosContainer">
-      <label style="color: black;">Productos</label><br>
+    <!-- Selección de productos -->
+    <div class="form-group">
+      <label for="productoSelect" style="color: black;"> Producto</label><br>
+      <select id="productoSelect" class="form-control js-example-basic-single">
+        <option value="" disabled selected>Selecciona un producto</option>
+        {% for producto in productos %}
+          <optgroup label="{{ producto.categoria }}">
+            <option value="{{ producto.id }}" data-precio="{{ producto.precio }}" data-nombre="{{ producto.name }}" data-stock="{{ producto.stock }}">
+              {{ producto.name }} ({{ producto.stock }} en stock)
+            </option>
+          </optgroup>
+        {% endfor %}
+      </select>
+      <button type="button" class="btn btn-secondary btn-sm mt-2" id="addProduct">Añadir Producto</button>
+    </div>
 
-      <button type="button" class="btn btn-secondary btn-sm" id="addProduct">Añadir Producto</button>
-
-      <div class="producto-row" style="margin-top: 10px;">
-        <select  name="productos_seleccionados[0][producto_id]" class="js-example-basic-single" required>
-          <option value="" disabled selected>Selecciona un producto</option>
-          {% for producto in productos %}
-            <optgroup label="{{ producto.categoria }}">
-            <option value="{{ producto.id }}" data-precio="{{ producto.precio }}">{{ producto.name }} ({{ producto.stock }} en stock)</option>
-            </optgroup>
-          {% endfor %}
-        </select>
-       <br><br> <input type="number" name="productos_seleccionados[0][cantidad]" class="form-control cantidad-input" placeholder="Cantidad" min="1" value="0" required>
-      </div>
+    <!-- Tabla de productos seleccionados -->
+    <div class="form-group">
+      <label style="color: black;">Productos</label>
+      <table class="table table-bordered mt-2" id="tablaProductos">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Stock</th>
+            <th>Precio Unitario</th>
+            <th>Cantidad</th>
+            <th>Subtotal</th>
+            <th>Eliminar</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
     </div>
 
     <!-- Total calculado automáticamente -->
@@ -47,87 +62,100 @@
   </form>
 </div>
 
-<script>
-  $(document).ready(function() {
-    $('.js-example-basic-single').select2();
-  });
-</script>
+
 <script id="productosData" type="application/json">
   {{ productos | tojson }}
 </script>
+<script>
+  $(document).ready(function () {
+    $('.js-example-basic-single').select2();
 
-<!-- <script>
-  const productosData = JSON.parse(document.getElementById('productosData').textContent);
-  let contadorProductos = 1;
-  
-  // Añadir nueva fila de producto
-  document.getElementById('addProduct').addEventListener('click', function() {
-    const container = document.getElementById('productosContainer');
-  
-    const div = document.createElement('div');
-    div.className = 'producto-row';
-    div.style.marginTop = '10px';
-  
-    div.innerHTML = `
-      <select name="productos_seleccionados[${contadorProductos}][producto_id]" class="form-control producto-select" required>
-        <option value="" disabled selected>Selecciona un producto</option>
-        ${productosData.map(p => `<option value="${p.id}" data-precio="${p.precio}" data-stock="${p.stock}">${p.name} (${p.stock} en stock)</option>`).join('')}
-      </select>
-      <input type="number" name="productos_seleccionados[${contadorProductos}][cantidad]" class="form-control cantidad-input" placeholder="Cantidad" min="1" value="1" required>
-      <button type="button" class="btn btn-danger btn-sm removeProduct" style="margin-top:5px;">Eliminar</button>
-    `;
-  
-    container.appendChild(div);
-    contadorProductos++;
-  
-    actualizarEventos();
-    actualizarTotal();
+    const productosSelect = $('#productoSelect');
+    const tablaProductos = $('#tablaProductos tbody');
+    let contador = 0;
+
+    function actualizarTotal() {
+      let total = 0;
+      tablaProductos.find('tr').each(function () {
+        const precio = parseFloat($(this).find('.precio-unitario').text()) || 0;
+        const cantidad = parseInt($(this).find('.cantidad').val()) || 0;
+        const subtotal = precio * cantidad;
+        $(this).find('.subtotal').text(subtotal.toFixed(2));
+        total += subtotal;
+      });
+      $('#total').val(total.toFixed(2));
+    }
+
+    $('#addProduct').click(function () {
+      const selectedOption = productosSelect.find('option:selected');
+      const productoId = selectedOption.val();
+
+      if (!productoId) {
+        alert('Selecciona un producto válido.');
+        return;
+      }
+
+      const nombre = selectedOption.data('nombre');
+      const precio = parseFloat(selectedOption.data('precio')).toFixed(2);
+      const stock = parseInt(selectedOption.data('stock'));
+
+      // Crear fila
+      const row = $(`
+        <tr data-producto-id="${productoId}">
+          <td>
+            ${nombre}
+            <input type="hidden" name="productos_seleccionados[${contador}][producto_id]" value="${productoId}">
+          </td>
+          <td>${stock}</td>
+          <td class="precio-unitario">${precio}</td>
+          <td>
+            <input style="width: 50px" type="number" name="productos_seleccionados[${contador}][cantidad]" class="form-control cantidad" value="1" min="<1" max="${stock}">
+          </td>
+          <td class="subtotal">${precio}</td>
+          <td>
+            <button type="button" class="btn btn-danger btn-sm eliminar-producto">X</button>
+          </td>
+        </tr>
+      `);
+
+      tablaProductos.append(row);
+      selectedOption.prop('disabled', true);
+      productosSelect.val(null).trigger('change');
+      contador++;
+      actualizarTotal();
+    });
+
+    // Delegación para eliminar producto
+    tablaProductos.on('click', '.eliminar-producto', function () {
+      const row = $(this).closest('tr');
+      const productoId = row.data('producto-id');
+      productosSelect.find(`option[value="${productoId}"]`).prop('disabled', false);
+      row.remove();
+      actualizarTotal();
+    });
+
+    // Delegación para cambio de cantidad
+    tablaProductos.on('input change', '.cantidad', function () {
+      const cantidadInput = $(this);
+      const max = parseInt(cantidadInput.attr('max'));
+      const val = parseInt(cantidadInput.val());
+      if (val > max) {
+        alert(`No hay suficiente stock. Máximo: ${max}`);
+        cantidadInput.val(max);
+      }
+      else if (val < 1) {
+        alert('La cantidad debe ser al menos 1.');
+        cantidadInput.val(1);
+      }
+      document.getElementById('ventaForm')?.addEventListener('submit', function (e) {
+    if (!totalInput.value || parseFloat(totalInput.value) <= 0) {
+      e.preventDefault();
+      alert('Debes seleccionar productos válidos y cantidades para calcular el total antes de enviar.');
+    }
   });
-  
-  // Eliminar producto del formulario
-  function actualizarEventos() {
-    document.querySelectorAll('.removeProduct').forEach(btn => {
-      btn.onclick = function() {
-        this.parentElement.remove();
-        actualizarTotal();
-      }
-    });
-  
-    document.querySelectorAll('.producto-select, .cantidad-input').forEach(input => {
-      input.onchange = actualizarTotal;
-      input.oninput = actualizarTotal;
-    });
-  }
-  
-  // Calcular el total de la venta
-  function actualizarTotal() {
-    let total = 0;
-    const selects = document.querySelectorAll('.producto-select');
-    const cantidades = document.querySelectorAll('.cantidad-input');
-  
-    selects.forEach((select, index) => {
-      const selectedOption = select.options[select.selectedIndex];
-      if (selectedOption) {
-        const precio = parseFloat(selectedOption.getAttribute('data-precio')) || 0;
-        const stock = parseInt(selectedOption.getAttribute('data-stock')) || 0;
-        const cantidad = parseInt(cantidades[index].value) || 0;
-  
-        if (cantidad > stock) {
-          alert(`No hay suficiente stock para ${selectedOption.text}. Máximo disponible: ${stock}`);
-          cantidades[index].value = stock;
-        }
-  
-        if (!isNaN(precio) && !isNaN(cantidad)) {
-          total += precio * cantidad;
-        }
-      }
-    });
-  
-    document.getElementById('total').value = total.toFixed(2);
-  }
-  
-  actualizarEventos();
-  </script>
-   -->
 
+      actualizarTotal();
+    });
+  });
+</script>
 {% endblock %}

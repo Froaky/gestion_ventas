@@ -128,61 +128,85 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-document.addEventListener('DOMContentLoaded', () => {
-  const productos = JSON.parse(document.getElementById('productosData')?.textContent || '[]');
-  const productosContainer = document.getElementById('productosContainer');
-  const totalInput = document.getElementById('total');
-  const addProductBtn = document.getElementById('addProduct');
+// document.addEventListener('DOMContentLoaded', () => {
+//   const productos = JSON.parse(document.getElementById('productosData')?.textContent || '[]');
+//   const productosContainer = document.getElementById('productosContainer');
+//   const totalInput = document.getElementById('total');
+//   const addProductBtn = document.getElementById('addProduct');
 
-  function actualizarTotal() {
-    let total = 0;
-    const filas = productosContainer.querySelectorAll('.producto-row');
+//   function actualizarTotal() {
+//     let total = 0;
+//     const filas = productosContainer.querySelectorAll('.producto-row');
 
-    filas.forEach(fila => {
-      const select = fila.querySelector('select');
-      const cantidadInput = fila.querySelector('input[type="number"]');
+//     filas.forEach(fila => {
+//       const select = fila.querySelector('select');
+//       const cantidadInput = fila.querySelector('input[type="number"]');
 
-      const precio = parseFloat(select?.selectedOptions[0]?.dataset.precio || '0');
-      const cantidad = parseInt(cantidadInput.value || '0');
-      if (!isNaN(precio) && !isNaN(cantidad)) {
-        total += precio * cantidad;
-      }
-    });
+//       const precio = parseFloat(select?.selectedOptions[0]?.dataset.precio || '0');
+//       const cantidad = parseInt(cantidadInput.value || '0');
+//       if (!isNaN(precio) && !isNaN(cantidad)) {
+//         total += precio * cantidad;
+//       }
+//     });
 
-    totalInput.value = total.toFixed(2);
-  }
+//     totalInput.value = total.toFixed(2);
+//   }
 
-  productosContainer.addEventListener('change', actualizarTotal);
-  productosContainer.addEventListener('input', actualizarTotal);
+//   productosContainer.addEventListener('change', actualizarTotal);
+//   productosContainer.addEventListener('input', actualizarTotal);
 
-  addProductBtn.addEventListener('click', () => {
-    const index = productosContainer.querySelectorAll('.producto-row').length;
-    const nuevaFila = document.createElement('div');
-    nuevaFila.classList.add('producto-row');
-    nuevaFila.style.marginTop = '10px';
+//   addProductBtn.addEventListener('click', () => {
+//     const index = productosContainer.querySelectorAll('.producto-row').length;
+//     const nuevaFila = document.createElement('div');
+//     nuevaFila.classList.add('producto-row');
+//     nuevaFila.style.marginTop = '10px';
 
-    nuevaFila.innerHTML = `
-      <select name="productos_seleccionados[${index}][producto_id]" class="js-example-basic-single" required>
-        <option value="" disabled selected>Selecciona un producto</option>
-        ${productos.map(p => `<optgroup label="${p.categoria}"><option value="${p.id}" data-precio="${p.precio}">${p.name} (${p.stock} en stock)</option></optgroup>`).join('')}
-      </select>
-      <br><br><input type="number" name="productos_seleccionados[${index}][cantidad]" class="form-control cantidad-input" placeholder="Cantidad" min="1" value="1" required>
-    `;
+//     nuevaFila.innerHTML = `
+//       <select name="productos_seleccionados[${index}][producto_id]" class="js-example-basic-single" required>
+//         <option value="" disabled selected>Selecciona un producto</option>
+//         ${productos.map(p => `<optgroup label="${p.categoria}"><option value="${p.id}" data-precio="${p.precio}">${p.name} (${p.stock} en stock)</option></optgroup>`).join('')}
+//       </select>
+//       <br><br><input type="number" name="productos_seleccionados[${index}][cantidad]" class="form-control cantidad-input" placeholder="Cantidad" min="1" value="0" required>
+//     `;
+//   //      nuevaFila.innerHTML = `
+//   //     <table>
+//   //         <thead>
+//   //           <tr>  
+//   //           <th style="width: 50%; padding-left: 10px;">cantidad</th>
+//   //           <th style="width: 50%; padding-left: 10px;">producto</th>
+//   //           <th style="width: 50%; padding-left: 10px;">precio</th>
+//   //           <th style="width: 50%; padding-left: 10px;">Acciones</th>
+//   //           </tr>
+//   //         </thead>
+//   //         <tbody>
+//   //           <tr>  
+            
+//   //             <td style="padding-left: 10px;">
+//   //               <input type="number" name="productos_seleccionados[${index}][cantidad]" class="form-control cantidad-input" placeholder="Cantidad" min="1" value="0" required>
+//   //             </td>
+//   //             ${productos.map(p => `
+//   //             <td>"${p.name}" </td>
+//   //             <td>"${p.precio}" </td>
+//   //             <td>"en stock:${p.stock}"</td>
+//   //             <td><button type="button" class="btn btn-danger btn-sm removeProduct" style="margin-top:5px;">Eliminar</button></td>
+//   //             `)}
+//   //         </tbody>
+//   //     </table>
+//   // `;
+//     productosContainer.appendChild(nuevaFila);
 
-    productosContainer.appendChild(nuevaFila);
-
-    // Inicializar select2 en el nuevo select
-    const select = nuevaFila.querySelector('select');
-    select.style.backgroundColor = '#f8f9fa';
-    select.style.border = '2px solid #007bff';
-    select.style.borderRadius = '10px';
-    select.style.padding = '2px';
-    select.style.height = '45px';
-    $(select).select2({
-      placeholder: 'Selecciona un producto',
+//     // Inicializar select2 en el nuevo select
+//     const select = nuevaFila.querySelector('select');
+//     select.style.backgroundColor = '#f8f9fa';
+//     select.style.border = '2px solid #007bff';
+//     select.style.borderRadius = '10px';
+//     select.style.padding = '2px';
+//     select.style.height = '45px';
+//     $(select).select2({
+//       placeholder: 'Selecciona un producto',
      
-    });
-  });
+//     });
+//   });
 
   // validación final antes de enviar (ya estaba en tu HTML)
   document.getElementById('ventaForm')?.addEventListener('submit', function (e) {
@@ -193,4 +217,4 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   actualizarTotal(); // calcular al inicio
-});
+// });
