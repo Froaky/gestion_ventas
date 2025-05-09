@@ -9,7 +9,7 @@
   <form method="POST" class="form" id="ventaForm">
     <!-- Cliente -->
     <div class="form-group">
-      <label for="cliente_id" style="color:white;">Cliente</label>
+      
       <select name="cliente_id" id="cliente_id" class="form-control" required>
         <option value="" disabled selected>Selecciona un cliente</option>
         {% for cliente in clientes %}
@@ -20,7 +20,7 @@
 
     <!-- Productos con cantidad -->
     <div class="form-group" id="productosContainer">
-      <label style="color:white;">Productos</label>
+      
       <button type="button" class="btn btn-secondary btn-sm" id="addProduct">Añadir Producto</button>
 
       <div class="producto-row" style="margin-top: 10px;">
